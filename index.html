@@ -12,13 +12,13 @@
     <link rel="apple-touch-icon" href="logo.png">
 
     <style>
-        /* --- تعریف فونت‌ها (حتماً فایل‌ها در پوشه fonts باشند) --- */
+        /* --- تعریف فونت‌ها --- */
         @font-face {
             font-family: 'Doran';
             src: url('fonts/Doran-ExtraBold.woff2') format('woff2');
             font-weight: bold;
             font-style: normal;
-            font-display: swap; /* جلوگیری از پرش متن */
+            font-display: swap;
         }
         @font-face {
             font-family: 'YekanBakh';
@@ -36,9 +36,8 @@
             --text-light: #F4F4F4;
             --text-muted: #aaaaaa;
             --error-red: #8a0e0e;
-            --card-bg: rgba(20, 20, 20, 0.90); /* کمی تیره‌تر برای خوانایی بهتر */
+            --card-bg: rgba(20, 20, 20, 0.90);
             
-            /* فونت‌های فال‌بک برای اطمینان از لود شدن */
             --font-heading: 'Doran', 'IranNastaliq', 'Times New Roman', serif;
             --font-body: 'YekanBakh', 'Tahoma', 'Arial', sans-serif;
         }
@@ -145,7 +144,7 @@
 
         .dash-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 40px; border-bottom: 1px solid var(--sovereign-gold); padding-bottom: 20px;
+            margin-bottom: 30px; border-bottom: 1px solid var(--sovereign-gold); padding-bottom: 20px;
             flex-wrap: wrap; gap: 15px;
         }
         .dash-logo { width: 60px; height: auto; }
@@ -153,6 +152,56 @@
         .client-name { color: var(--sovereign-gold); font-size: 1.4rem; margin: 0; font-family: var(--font-heading); line-height: 1.4; }
         .client-role { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 5px; font-family: monospace; }
 
+        /* --- ACTION BAR (Download Button) --- */
+        .action-bar {
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards; /* تاخیر برای نمایش بعد از لود صفحه */
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(235, 180, 15, 0.05);
+            border: 1px solid var(--sovereign-gold);
+            color: var(--sovereign-gold);
+            padding: 12px 35px;
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background: var(--sovereign-gold);
+            color: var(--rashn-black);
+            box-shadow: 0 0 35px var(--gold-glow);
+            letter-spacing: 1px;
+            transform: translateY(-2px);
+        }
+
+        .download-btn .icon {
+            font-size: 1.4rem;
+            margin-left: 10px;
+            transition: transform 0.3s;
+            line-height: 0;
+        }
+        /* اصلاح آیکون در حالت انگلیسی */
+        html[dir="ltr"] .download-btn .icon { margin-left: 0; margin-right: 10px; }
+        
+        .download-btn:hover .icon { transform: translateY(3px); }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+
+        /* --- CARDS --- */
         .dossier-card {
             background: var(--card-bg); border: 1px solid rgba(235, 180, 15, 0.2);
             border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 30px;
@@ -199,7 +248,7 @@
         /* Responsive Grid */
         @media (min-width: 768px) {
             .cols-3 { grid-template-columns: repeat(3, 1fr); }
-            .cols-4 { grid-template-columns: repeat(2, 1fr); } /* 2x2 for aesthetic balance */
+            .cols-4 { grid-template-columns: repeat(2, 1fr); } 
             .gate-interface { width: 400px; max-width: none; }
             .main-logo { width: 180px; }
             .dossier-title { font-size: 1.4rem; }
@@ -237,6 +286,13 @@
                 <p class="client-role">Status: TOP SECRET // Clearance: Level 33</p>
             </div>
         </header>
+
+        <div class="action-bar">
+            <a href="dossier.pdf" target="_blank" class="download-btn">
+                <span class="icon">⤓</span> 
+                <span data-key="download_text">دریافت نسخه کامل پرونده (PDF)</span>
+            </a>
+        </div>
 
         <div class="dossier-container">
             
@@ -278,8 +334,7 @@
     </section>
 
     <script>
-        // --- تنظیمات زبان و محتوا ---
-        // این بخش قلب تپنده محتوای دوزبانه است.
+        // --- تنظیمات زبان ---
         const translations = {
             fa: {
                 gate_title: "ورود به خزانه",
@@ -287,6 +342,7 @@
                 error_msg: "خطای امنیتی: کلید نامعتبر است",
                 success_msg: "دسترسی تایید شد. بارگذاری کنسول...",
                 processing: "در حال پردازش...",
+                download_text: "دریافت نسخه کامل پرونده (PDF)",
                 doc1_title: "پیمان راهبردی رشد و شکوفایی بنگاه PMP Iran",
                 doc1_col1: "بازبینی جامع و کامل و بازتنظیم سازمانی به اقتضائات عصر دانایی",
                 doc1_col2: "بررسی و بازبینی وضعیت کنونی سازمان در بهره‌مندی شایسته از دستاوردهای عصر شمارپیکرپردازگانی",
@@ -307,6 +363,7 @@
                 error_msg: "SECURITY ALERT: INVALID KEY",
                 success_msg: "ACCESS GRANTED. LOADING CONSOLE...",
                 processing: "PROCESSING...",
+                download_text: "DOWNLOAD FULL DOSSIER (PDF)",
                 doc1_title: "Strategic Pact for PMP Iran Growth & Flourishing",
                 doc1_col1: "Comprehensive Organizational Audit & Realignment for the Age of Wisdom",
                 doc1_col2: "Current State Audit on Leveraging Digital Age Achievements & Realignment Planning",
@@ -330,7 +387,6 @@
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
             
-            // به‌روزرسانی متون
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if (translations[currentLang][key]) {
@@ -338,11 +394,9 @@
                 }
             });
             
-            // تغییر فونت‌ها و استایل‌ها بر اساس زبان
             if(currentLang === 'en') {
                 document.documentElement.style.setProperty('--font-heading', "'Times New Roman', serif");
                 document.documentElement.style.setProperty('--font-body', "'Arial', sans-serif");
-                // جابجایی خط طلایی کنار کارت‌ها در حالت چپ‌چین
                 document.querySelectorAll('.dossier-card').forEach(card => {
                     card.style.direction = 'ltr';
                 });
@@ -355,7 +409,7 @@
             }
         }
 
-        // --- منطق ورود امنیتی ---
+        // --- منطق ورود ---
         const gateSection = document.getElementById('gate-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const status = document.getElementById('status-msg');
@@ -366,21 +420,18 @@
             const input = inputField.value;
             
             if(input === "G-Flourish-33-M16") {
-                // تایید موفقیت
                 status.style.color = "#EBB40F"; 
                 status.innerText = translations[currentLang].success_msg;
                 status.style.opacity = 1;
                 btn.style.opacity = 0.5;
                 btn.innerText = translations[currentLang].processing;
-                btn.disabled = true; // جلوگیری از کلیک مجدد
+                btn.disabled = true;
                 
-                // انیمیشن ورود
                 setTimeout(() => {
                     gateSection.style.opacity = 0;
                     setTimeout(() => {
                         gateSection.style.display = 'none';
                         dashboardSection.style.display = 'block';
-                        // تریگر کردن انیمیشن CSS با تاخیر کم
                         requestAnimationFrame(() => {
                             dashboardSection.style.opacity = 1;
                             dashboardSection.style.transform = 'translateY(0)';
@@ -389,12 +440,10 @@
                 }, 1500);
 
             } else {
-                // خطای ورود
                 status.style.color = "#8a0e0e";
                 status.innerText = translations[currentLang].error_msg;
                 status.style.opacity = 1;
                 
-                // لرزش اینپوت
                 inputField.style.borderColor = "#8a0e0e";
                 inputField.animate([
                     { transform: 'translateX(0px)' },
@@ -413,13 +462,10 @@
             if (event.key === "Enter") verifyAccess();
         });
         
-        // Service Worker Register
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(registration => {
-                    console.log('SW registered: ', registration);
-                }).catch(registrationError => {
-                    console.log('SW registration failed: ', registrationError);
+                navigator.serviceWorker.register('sw.js').catch(error => {
+                    console.log('SW Registration Failed');
                 });
             });
         }
