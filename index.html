@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ILA VERTEX | The Sovereign Gate</title>
+    <title>ILA VERTEX | Command Console</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#030303">
@@ -13,10 +13,13 @@
     <style>
         :root {
             --rashn-black: #030303;
-            --royal-purple: #66023C;
+            --royal-purple-glow: rgba(102, 2, 60, 0.3);
             --sovereign-gold: #EBB40F;
+            --gold-glow: rgba(235, 180, 15, 0.2);
             --text-light: #F4F4F4;
+            --text-muted: #aaaaaa;
             --error-red: #8a0e0e;
+            --card-bg: rgba(20, 20, 20, 0.8);
         }
 
         body, html {
@@ -24,116 +27,147 @@
             margin: 0;
             background-color: var(--rashn-black);
             color: var(--text-light);
-            font-family: 'Times New Roman', 'IranNastaliq', serif; /* فونت‌های لوکس */
-            overflow: hidden; /* جلوگیری از اسکرول */
+            font-family: 'Times New Roman', 'IranNastaliq', serif;
+            overflow-x: hidden;
+        }
+
+        /* پس‌زمینه زنده مشترک */
+        .ambient-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 30%, var(--royal-purple-glow) 0%, var(--rashn-black) 70%);
+            z-index: -1;
+        }
+
+        /* ================= GATE SECTION (Login) ================= */
+        #gate-section {
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* پس‌زمینه با هاله ارغوانی محو */
-        .ambient-glow {
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at center, rgba(102, 2, 60, 0.15) 0%, rgba(3, 3, 3, 1) 70%);
-            z-index: -1;
-        }
-
-        /* لوگوی مرکزی */
         .logo-container {
-            margin-bottom: 50px;
-            animation: breathe 4s infinite ease-in-out;
+            margin-bottom: 5vh;
+            animation: float 6s ease-in-out infinite;
         }
-        
-        .main-logo {
-            width: 180px; /* اندازه متناسب */
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(235, 180, 15, 0.2));
-        }
+        .main-logo { width: 150px; height: auto; filter: drop-shadow(0 0 20px var(--gold-glow)); }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
-        @keyframes breathe {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(235, 180, 15, 0.1)); }
-            50% { transform: scale(1.02); filter: drop-shadow(0 0 25px rgba(235, 180, 15, 0.4)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(235, 180, 15, 0.1)); }
-        }
-
-        /* ناحیه ورود رمز */
-        .gate-interface {
-            text-align: center;
-            width: 100%;
-            max-width: 320px;
-            z-index: 10;
-        }
-
-        .instruction {
-            font-size: 0.9rem;
-            color: var(--sovereign-gold);
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
+        .gate-interface { display: flex; flex-direction: column; align-items: center; width: 320px; }
+        .instruction { color: var(--sovereign-gold); letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; }
         .access-input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--text-light);
-            color: var(--sovereign-gold);
-            font-size: 1.5rem;
-            text-align: center;
-            width: 100%;
-            padding: 10px;
-            font-family: monospace; /* برای حس کدنویسی */
-            letter-spacing: 5px;
-            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--gold-glow); color: var(--sovereign-gold);
+            font-size: 1.1rem; text-align: center; width: 100%; padding: 12px; font-family: monospace; letter-spacing: 2px;
+            transition: all 0.3s; margin-bottom: 10px; border-radius: 4px;
         }
-
-        .access-input:focus {
-            outline: none;
-            border-bottom: 1px solid var(--sovereign-gold);
-            box-shadow: 0 10px 20px -10px rgba(235, 180, 15, 0.2);
-        }
-
+        .access-input:focus { outline: none; border-color: var(--sovereign-gold); box-shadow: 0 0 15px var(--gold-glow); }
         .enter-btn {
-            margin-top: 30px;
-            background: transparent;
-            border: 1px solid var(--text-light);
-            color: var(--text-light);
-            padding: 10px 30px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            letter-spacing: 2px;
+            margin-top: 20px; background: transparent; border: 1px solid rgba(244,244,244,0.3); color: var(--text-light);
+            padding: 10px 30px; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
         }
+        .enter-btn:hover { background: var(--sovereign-gold); color: var(--rashn-black); border-color: var(--sovereign-gold); }
+        .status-message { margin-top: 15px; height: 20px; font-size: 0.8rem; color: var(--error-red); opacity: 0; font-family: monospace; }
 
-        .enter-btn:hover {
-            background: var(--sovereign-gold);
-            border-color: var(--sovereign-gold);
-            color: var(--rashn-black);
-        }
-
-        /* پیام خطا یا موفقیت */
-        .status-message {
-            margin-top: 20px;
-            height: 20px;
-            font-size: 0.8rem;
-            color: var(--error-red);
+        /* ================= DASHBOARD SECTION (Console) ================= */
+        #dashboard-section {
+            display: none; /* در ابتدا مخفی است */
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
             opacity: 0;
-            transition: opacity 0.3s;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* دکمه زبان */
-        .lang-switch {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            color: #555;
-            transition: color 0.3s;
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--gold-glow);
+            padding-bottom: 20px;
         }
-        .lang-switch:hover { color: var(--sovereign-gold); }
+        .dash-logo { width: 80px; height: auto; }
+        .client-welcome { text-align: left; }
+        .client-name { color: var(--sovereign-gold); font-size: 1.2rem; margin: 0; }
+        .client-role { color: var(--text-muted); font-size: 0.8rem; margin: 5px 0 0 0; letter-spacing: 1px; }
+
+        /* Dossier Cards */
+        .dossier-container { display: flex; flex-direction: column; gap: 30px; }
+        
+        .dossier-card {
+            background: var(--card-bg);
+            border: 1px solid var(--gold-glow);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .dossier-card::before {
+            content: ''; position: absolute; top:0; left:0; width: 4px; height: 100%;
+            background: var(--sovereign-gold); box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .dossier-header {
+            background: rgba(235, 180, 15, 0.05);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(235, 180, 15, 0.1);
+        }
+        .dossier-title {
+            margin: 0; color: var(--sovereign-gold); font-size: 1.1rem;
+            display: flex; align-items: center;
+        }
+        .dossier-icon { margin-left: 10px; opacity: 0.7; }
+
+        .dossier-content {
+            padding: 20px;
+            display: grid;
+            gap: 20px;
+        }
+
+        /* تنظیم ستون‌ها بر اساس تعداد */
+        .cols-3 { grid-template-columns: repeat(1, 1fr); }
+        .cols-4 { grid-template-columns: repeat(2, 1fr); }
+
+        /* استایل آیتم‌های داخل ستون‌ها */
+        .data-column {
+            border-right: 1px solid rgba(244, 244, 244, 0.1);
+            padding-right: 15px;
+        }
+        .data-column:last-child { border-right: none; }
+        
+        .data-item {
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            height: 100%;
+            display: flex; align-items: center;
+        }
+        .data-item:hover {
+            border-color: var(--gold-glow);
+            background: rgba(235, 180, 15, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Adjustments for Dashboard */
+        @media (min-width: 768px) {
+            .cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .dossier-title { font-size: 1.3rem; }
+            #dashboard-section { padding-top: 40px; }
+            .data-column { border-bottom: none; }
+        }
+        @media (max-width: 767px) {
+            .data-column { border-right: none; border-bottom: 1px solid rgba(244, 244, 244, 0.1); padding-bottom: 15px; padding-right: 0; }
+            .data-column:last-child { border-bottom: none; }
+        }
 
     </style>
 </head>
@@ -141,69 +175,134 @@
 
     <div class="ambient-glow"></div>
 
-    <div class="logo-container">
-        <img src="logo.png" alt="ILA Vertex Logo" class="main-logo">
-    </div>
+    <section id="gate-section">
+        <div class="logo-container">
+            <img src="logo.png" alt="ILA Vertex Logo" class="main-logo">
+        </div>
+        <div class="gate-interface">
+            <div class="instruction"> پروتکل امنیتی فعال است</div>
+            <input type="password" id="passkey" class="access-input" placeholder="کلید دسترسی را وارد کنید">
+            <div class="status-message" id="status-msg"></div>
+            <button class="enter-btn" onclick="verifyAccess()">ورود به پرونده</button>
+        </div>
+    </section>
 
-    <div class="gate-interface">
-        <div class="instruction" id="lbl-instruction">ورود به خزانه</div>
-        <input type="password" id="passkey" class="access-input" placeholder="• • • • • •" maxlength="10">
-        <div class="status-message" id="status-msg"></div>
-        <button class="enter-btn" onclick="verifyAccess()" id="btn-enter">بارگذاری پرونده</button>
-    </div>
+    <section id="dashboard-section">
+        <header class="dash-header">
+            <img src="logo.png" alt="ILA Logo" class="dash-logo">
+            <div class="client-welcome" dir="ltr">
+                <h1 class="client-name">PMP IRAN COMMAND CONSOLE</h1>
+                <p class="client-role">Status: TOP SECRET // Clearance: Level 33</p>
+            </div>
+        </header>
 
-    <div class="lang-switch" onclick="toggleLang()">EN / FA</div>
+        <div class="dossier-container">
+            
+            <div class="dossier-card">
+                <div class="dossier-header">
+                    <h2 class="dossier-title">
+                        <span class="dossier-icon">◈</span>
+                        پیمان راهبردی رشد و شکوفایی بنگاه PMP Iran
+                    </h2>
+                </div>
+                <div class="dossier-content cols-3">
+                    <div class="data-column"><div class="data-item">بازبینی جامع و کامل و بازتنظیم سازمانی به اقتضائات عصر دانایی</div></div>
+                    <div class="data-column"><div class="data-item">بررسی و بازبینی وضعیت کنونی سازمان در بهره مندی شایسته از دستاوردهای عصر شمارپیکرپردازگانی...</div></div>
+                    <div class="data-column"><div class="data-item">بررسی و بازبینی وضعیت کنونی سازمان در بهره مندی از امکان حضور در عرصه کارگردیاری جهانی...</div></div>
+                </div>
+            </div>
+
+            <div class="dossier-card">
+                <div class="dossier-header">
+                    <h2 class="dossier-title">
+                        <span class="dossier-icon">◈</span>
+                        پیمان سری راهبردی رشد و شکوفایی شخصی
+                    </h2>
+                </div>
+                <div class="dossier-content cols-4">
+                    <div class="data-column"><div class="data-item" style="justify-content: center;">برخواستگان گردیاری</div></div>
+                    <div class="data-column"><div class="data-item" style="justify-content: center;">چابکی</div></div>
+                    <div class="data-column"><div class="data-item" style="justify-content: center;">نومانی</div></div>
+                    <div class="data-column"><div class="data-item" style="justify-content: center;">نونشانی و نوآنی</div></div>
+                </div>
+            </div>
+
+            <div class="dossier-card">
+                <div class="dossier-header">
+                    <h2 class="dossier-title">
+                        <span class="dossier-icon">◈</span>
+                        پیمان راهبردی برای راه اندازی خطوط باردهی نو
+                    </h2>
+                </div>
+                <div class="dossier-content cols-3">
+                    <div class="data-column"><div class="data-item">طریقت: از نگرشِ کاسبی تا بینش کارگردیارانه</div></div>
+                    <div class="data-column"><div class="data-item">فتوت: از دیدگاهِ بازاری تا آداب و رسوم کارگردیاری</div></div>
+                    <div class="data-column"><div class="data-item">کیمیاگری: از مال پرستی تا ارزش گردآری</div></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
     <script>
-        // دیکشنری ساده دو زبانه
-        const texts = {
-            fa: { instruction: "ورود به خزانه", btn: "بارگذاری پرونده", error: "دسترسی مجاز نیست", success: "در حال رمزگشایی...", placeholder: "• • • • • •" },
-            en: { instruction: "ACCESS THE VAULT", btn: "INITIATE PROTOCOL", error: "ACCESS DENIED", success: "DECRYPTING...", placeholder: "• • • • • •" }
-        };
-        
-        let currentLang = 'fa';
-
-        function toggleLang() {
-            currentLang = currentLang === 'fa' ? 'en' : 'fa';
-            document.documentElement.lang = currentLang;
-            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-            
-            document.getElementById('lbl-instruction').innerText = texts[currentLang].instruction;
-            document.getElementById('btn-enter').innerText = texts[currentLang].btn;
-            document.getElementById('status-msg').innerText = ''; 
-        }
+        const gateSection = document.getElementById('gate-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const status = document.getElementById('status-msg');
+        const inputField = document.getElementById('passkey');
+        const btn = document.querySelector('.enter-btn');
 
         function verifyAccess() {
-            const input = document.getElementById('passkey').value;
-            const status = document.getElementById('status-msg');
+            const input = inputField.value;
             
-            // شبیه‌سازی تایید رمز (در آینده به دیتابیس متصل می‌شود)
-            // رمز موقت برای دیدن دمو: ILA1404
-            if(input === "ILA1404" || input === "PMP-IRAN") {
-                status.style.color = "#EBB40F"; // Gold for success
-                status.innerText = texts[currentLang].success;
+            // رمز عبور جدید
+            if(input === "G-Flourish-33-M16") {
+                // حالت موفقیت
+                status.style.color = "#EBB40F"; 
+                status.innerText = "دسترسی تایید شد. بارگذاری کنسول...";
                 status.style.opacity = 1;
+                btn.style.opacity = 0.5;
+                btn.innerText = "در حال پردازش...";
                 
-                // افکت نمایشی تاخیر
                 setTimeout(() => {
-                    alert("خوش آمدید معمار. پرونده PMP IRAN در دسترس است.");
-                    // در اینجا کاربر به صفحه اختصاصی (مثلا pmp-audit.html) هدایت می‌شود
-                    // window.location.href = 'dashboard.html';
+                    // انیمیشن انتقال
+                    gateSection.style.opacity = 0;
+                    gateSection.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        gateSection.style.display = 'none';
+                        dashboardSection.style.display = 'block';
+                        // ترفند برای فعال شدن انیمیشن CSS
+                        setTimeout(() => {
+                            dashboardSection.style.opacity = 1;
+                            dashboardSection.style.transform = 'translateY(0)';
+                        }, 50);
+                    }, 800);
                 }, 1500);
+
             } else {
-                status.style.color = "#8a0e0e"; // Red for error
-                status.innerText = texts[currentLang].error;
+                // حالت خطا
+                status.style.color = "#8a0e0e";
+                status.innerText = "خطای امنیتی: کلید نامعتبر است";
                 status.style.opacity = 1;
                 
-                // لرزش اینپوت
-                const inputField = document.getElementById('passkey');
-                inputField.style.transform = "translateX(5px)";
-                setTimeout(() => inputField.style.transform = "translateX(-5px)", 50);
-                setTimeout(() => inputField.style.transform = "translateX(0)", 100);
+                inputField.style.borderColor = "#8a0e0e";
+                inputField.animate([
+                    { transform: 'translateX(0px)' },
+                    { transform: 'translateX(5px)' },
+                    { transform: 'translateX(-5px)' },
+                    { transform: 'translateX(0px)' }
+                ], { duration: 200 });
+                
+                setTimeout(() => {
+                    inputField.style.borderColor = "var(--gold-glow)";
+                }, 1000);
             }
         }
 
-        // PWA Service Worker Registration
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") verifyAccess();
+        });
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
