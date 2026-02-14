@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ILA VERTEX | The Sovereign Gate</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#030303">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <style>
+        :root {
+            --rashn-black: #030303;
+            --royal-purple: #66023C;
+            --sovereign-gold: #EBB40F;
+            --text-light: #F4F4F4;
+            --error-red: #8a0e0e;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--rashn-black);
+            color: var(--text-light);
+            font-family: 'Times New Roman', 'IranNastaliq', serif; /* فونت‌های لوکس */
+            overflow: hidden; /* جلوگیری از اسکرول */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* پس‌زمینه با هاله ارغوانی محو */
+        .ambient-glow {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(102, 2, 60, 0.15) 0%, rgba(3, 3, 3, 1) 70%);
+            z-index: -1;
+        }
+
+        /* لوگوی مرکزی */
+        .logo-container {
+            margin-bottom: 50px;
+            animation: breathe 4s infinite ease-in-out;
+        }
+        
+        .main-logo {
+            width: 180px; /* اندازه متناسب */
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(235, 180, 15, 0.2));
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(235, 180, 15, 0.1)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 25px rgba(235, 180, 15, 0.4)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(235, 180, 15, 0.1)); }
+        }
+
+        /* ناحیه ورود رمز */
+        .gate-interface {
+            text-align: center;
+            width: 100%;
+            max-width: 320px;
+            z-index: 10;
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            color: var(--sovereign-gold);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .access-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--text-light);
+            color: var(--sovereign-gold);
+            font-size: 1.5rem;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            font-family: monospace; /* برای حس کدنویسی */
+            letter-spacing: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .access-input:focus {
+            outline: none;
+            border-bottom: 1px solid var(--sovereign-gold);
+            box-shadow: 0 10px 20px -10px rgba(235, 180, 15, 0.2);
+        }
+
+        .enter-btn {
+            margin-top: 30px;
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 10px 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            letter-spacing: 2px;
+        }
+
+        .enter-btn:hover {
+            background: var(--sovereign-gold);
+            border-color: var(--sovereign-gold);
+            color: var(--rashn-black);
+        }
+
+        /* پیام خطا یا موفقیت */
+        .status-message {
+            margin-top: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            color: var(--error-red);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* دکمه زبان */
+        .lang-switch {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #555;
+            transition: color 0.3s;
+        }
+        .lang-switch:hover { color: var(--sovereign-gold); }
+
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="logo-container">
+        <img src="logo.png" alt="ILA Vertex Logo" class="main-logo">
+    </div>
+
+    <div class="gate-interface">
+        <div class="instruction" id="lbl-instruction">ورود به خزانه</div>
+        <input type="password" id="passkey" class="access-input" placeholder="• • • • • •" maxlength="10">
+        <div class="status-message" id="status-msg"></div>
+        <button class="enter-btn" onclick="verifyAccess()" id="btn-enter">بارگذاری پرونده</button>
+    </div>
+
+    <div class="lang-switch" onclick="toggleLang()">EN / FA</div>
+
+    <script>
+        // دیکشنری ساده دو زبانه
+        const texts = {
+            fa: { instruction: "ورود به خزانه", btn: "بارگذاری پرونده", error: "دسترسی مجاز نیست", success: "در حال رمزگشایی...", placeholder: "• • • • • •" },
+            en: { instruction: "ACCESS THE VAULT", btn: "INITIATE PROTOCOL", error: "ACCESS DENIED", success: "DECRYPTING...", placeholder: "• • • • • •" }
+        };
+        
+        let currentLang = 'fa';
+
+        function toggleLang() {
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            
+            document.getElementById('lbl-instruction').innerText = texts[currentLang].instruction;
+            document.getElementById('btn-enter').innerText = texts[currentLang].btn;
+            document.getElementById('status-msg').innerText = ''; 
+        }
+
+        function verifyAccess() {
+            const input = document.getElementById('passkey').value;
+            const status = document.getElementById('status-msg');
+            
+            // شبیه‌سازی تایید رمز (در آینده به دیتابیس متصل می‌شود)
+            // رمز موقت برای دیدن دمو: ILA1404
+            if(input === "ILA1404" || input === "PMP-IRAN") {
+                status.style.color = "#EBB40F"; // Gold for success
+                status.innerText = texts[currentLang].success;
+                status.style.opacity = 1;
+                
+                // افکت نمایشی تاخیر
+                setTimeout(() => {
+                    alert("خوش آمدید معمار. پرونده PMP IRAN در دسترس است.");
+                    // در اینجا کاربر به صفحه اختصاصی (مثلا pmp-audit.html) هدایت می‌شود
+                    // window.location.href = 'dashboard.html';
+                }, 1500);
+            } else {
+                status.style.color = "#8a0e0e"; // Red for error
+                status.innerText = texts[currentLang].error;
+                status.style.opacity = 1;
+                
+                // لرزش اینپوت
+                const inputField = document.getElementById('passkey');
+                inputField.style.transform = "translateX(5px)";
+                setTimeout(() => inputField.style.transform = "translateX(-5px)", 50);
+                setTimeout(() => inputField.style.transform = "translateX(0)", 100);
+            }
+        }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
+
