@@ -2,7 +2,9 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title>ILA VERTEX | Sovereign Console</title>
     
     <link rel="manifest" href="manifest.json">
@@ -10,36 +12,43 @@
     <link rel="apple-touch-icon" href="logo.png">
 
     <style>
-        /* --- تعریف فونت‌ها --- */
+        /* --- تعریف فونت‌ها (حتماً فایل‌ها در پوشه fonts باشند) --- */
         @font-face {
             font-family: 'Doran';
-            src: url('fonts/Doran-ExtraBold.woff2') format('woff2'); /* مسیر فایل فونت */
+            src: url('fonts/Doran-ExtraBold.woff2') format('woff2');
             font-weight: bold;
             font-style: normal;
+            font-display: swap; /* جلوگیری از پرش متن */
         }
         @font-face {
             font-family: 'YekanBakh';
-            src: url('fonts/YekanBakh-Regular.woff2') format('woff2'); /* مسیر فایل فونت */
+            src: url('fonts/YekanBakh-Regular.woff2') format('woff2');
             font-weight: normal;
             font-style: normal;
+            font-display: swap;
         }
 
         :root {
             --rashn-black: #030303;
             --royal-purple-glow: rgba(102, 2, 60, 0.4);
             --sovereign-gold: #EBB40F;
-            --gold-glow: rgba(235, 180, 15, 0.6); /* درخشش قوی‌تر */
+            --gold-glow: rgba(235, 180, 15, 0.6);
             --text-light: #F4F4F4;
             --text-muted: #aaaaaa;
             --error-red: #8a0e0e;
-            --card-bg: rgba(20, 20, 20, 0.85);
-            --font-heading: 'Doran', 'IranNastaliq', serif;
-            --font-body: 'YekanBakh', 'Tahoma', sans-serif;
+            --card-bg: rgba(20, 20, 20, 0.90); /* کمی تیره‌تر برای خوانایی بهتر */
+            
+            /* فونت‌های فال‌بک برای اطمینان از لود شدن */
+            --font-heading: 'Doran', 'IranNastaliq', 'Times New Roman', serif;
+            --font-body: 'YekanBakh', 'Tahoma', 'Arial', sans-serif;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
             height: 100%;
             margin: 0;
+            padding: 0;
             background-color: var(--rashn-black);
             color: var(--text-light);
             font-family: var(--font-body);
@@ -52,6 +61,7 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 40%, var(--royal-purple-glow) 0%, var(--rashn-black) 70%);
             z-index: -1;
+            pointer-events: none;
         }
 
         /* --- GATE SECTION --- */
@@ -62,33 +72,34 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.8s ease;
+            z-index: 10;
         }
 
-        /* بازگشت درخشش لوگو */
         .logo-container {
-            margin-bottom: 6vh;
+            margin-bottom: 5vh;
             animation: breathe 4s infinite ease-in-out;
         }
         .main-logo {
-            width: 160px; height: auto;
-            filter: drop-shadow(0 0 25px var(--gold-glow)); /* درخشش اصلی */
+            width: 140px; height: auto;
+            filter: drop-shadow(0 0 25px var(--gold-glow));
         }
 
         @keyframes breathe {
             0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(235, 180, 15, 0.3)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 40px rgba(235, 180, 15, 0.7)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 35px rgba(235, 180, 15, 0.7)); }
             100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(235, 180, 15, 0.3)); }
         }
 
-        .gate-interface { display: flex; flex-direction: column; align-items: center; width: 320px; }
+        .gate-interface { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 320px; }
         
         .instruction { 
             color: var(--sovereign-gold); 
-            letter-spacing: 2px; 
-            margin-bottom: 25px; 
+            letter-spacing: 1px; 
+            margin-bottom: 20px; 
             text-transform: uppercase; 
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             font-family: var(--font-heading);
+            text-shadow: 0 0 10px rgba(235, 180, 15, 0.3);
         }
 
         .access-input {
@@ -99,24 +110,35 @@
             font-family: monospace; letter-spacing: 3px;
             margin-bottom: 10px; border-radius: 4px;
             box-shadow: 0 0 10px rgba(235, 180, 15, 0.1);
+            transition: all 0.3s ease;
         }
-        .access-input:focus { outline: none; box-shadow: 0 0 25px var(--gold-glow); }
+        .access-input:focus { outline: none; box-shadow: 0 0 25px var(--gold-glow); background: rgba(255,255,255,0.08); }
 
         .enter-btn {
-            margin-top: 25px; background: transparent; 
+            margin-top: 20px; background: transparent; 
             border: 1px solid rgba(244,244,244,0.3); 
             color: var(--text-light);
-            padding: 10px 35px; font-size: 0.9rem; cursor: pointer; 
+            padding: 12px 35px; font-size: 0.95rem; cursor: pointer; 
             transition: all 0.3s; letter-spacing: 1px;
             font-family: var(--font-body);
+            border-radius: 2px;
         }
-        .enter-btn:hover { background: var(--sovereign-gold); color: var(--rashn-black); border-color: var(--sovereign-gold); }
+        .enter-btn:hover, .enter-btn:active { 
+            background: var(--sovereign-gold); 
+            color: var(--rashn-black); 
+            border-color: var(--sovereign-gold);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
         
-        .status-message { margin-top: 15px; height: 20px; font-size: 0.8rem; color: var(--error-red); opacity: 0; font-family: monospace; }
+        .status-message { 
+            margin-top: 15px; min-height: 24px; 
+            font-size: 0.85rem; color: var(--error-red); 
+            opacity: 0; font-family: monospace; transition: opacity 0.3s;
+        }
 
         /* --- DASHBOARD SECTION --- */
         #dashboard-section {
-            display: none; padding: 20px; max-width: 1200px; margin: 0 auto;
+            display: none; padding: 20px 20px 80px 20px; max-width: 1200px; margin: 0 auto;
             opacity: 0; transform: translateY(20px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
@@ -124,45 +146,66 @@
         .dash-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 40px; border-bottom: 1px solid var(--sovereign-gold); padding-bottom: 20px;
+            flex-wrap: wrap; gap: 15px;
         }
-        .dash-logo { width: 70px; height: auto; }
+        .dash-logo { width: 60px; height: auto; }
         
-        .client-name { color: var(--sovereign-gold); font-size: 1.3rem; margin: 0; font-family: var(--font-heading); }
-        .client-role { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 1px; margin-top: 5px; }
+        .client-name { color: var(--sovereign-gold); font-size: 1.4rem; margin: 0; font-family: var(--font-heading); line-height: 1.4; }
+        .client-role { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 5px; font-family: monospace; }
 
         .dossier-card {
-            background: var(--card-bg); border: 1px solid rgba(235, 180, 15, 0.3);
+            background: var(--card-bg); border: 1px solid rgba(235, 180, 15, 0.2);
             border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .dossier-card::before {
-            content: ''; position: absolute; top:0; left:0; width: 4px; height: 100%;
+            content: ''; position: absolute; top:0; right:0; width: 4px; height: 100%;
             background: var(--sovereign-gold); box-shadow: 0 0 15px var(--gold-glow);
         }
+        html[dir="ltr"] .dossier-card::before { right: auto; left: 0; }
 
-        .dossier-header { background: rgba(235, 180, 15, 0.05); padding: 15px 20px; }
-        .dossier-title { margin: 0; color: var(--sovereign-gold); font-size: 1.1rem; font-family: var(--font-heading); }
+        .dossier-header { 
+            background: linear-gradient(90deg, rgba(235, 180, 15, 0.1), transparent); 
+            padding: 15px 20px; border-bottom: 1px solid rgba(235, 180, 15, 0.1);
+        }
+        .dossier-title { margin: 0; color: var(--sovereign-gold); font-size: 1.2rem; font-family: var(--font-heading); }
         
-        .dossier-content { padding: 20px; display: grid; gap: 20px; }
-        .cols-3 { grid-template-columns: repeat(1, 1fr); }
-        .cols-4 { grid-template-columns: repeat(2, 1fr); }
+        .dossier-content { padding: 20px; display: grid; gap: 15px; }
+        .cols-3 { grid-template-columns: 1fr; }
+        .cols-4 { grid-template-columns: 1fr; }
 
         .data-item {
-            background: rgba(255,255,255,0.02); padding: 15px; border-radius: 4px;
-            font-size: 0.9rem; color: var(--text-light); line-height: 1.6;
+            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 4px;
+            font-size: 0.95rem; color: var(--text-light); line-height: 1.7;
             border: 1px solid transparent; height: 100%; display: flex; align-items: center;
-            transition: 0.3s;
+            transition: all 0.3s;
+            text-align: justify;
         }
-        .data-item:hover { border-color: var(--sovereign-gold); transform: translateY(-3px); }
+        .data-item:hover { 
+            border-color: rgba(235, 180, 15, 0.5); 
+            background: rgba(235, 180, 15, 0.05);
+            transform: translateY(-2px); 
+        }
 
         /* Language Switcher */
         .lang-switch-container {
-            position: fixed; bottom: 20px; width: 100%; text-align: center;
-            z-index: 100; cursor: pointer; color: #555; font-size: 0.8rem; letter-spacing: 2px;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 100; cursor: pointer; color: #666; font-size: 0.9rem; letter-spacing: 2px;
+            background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 20px;
+            border: 1px solid #333; transition: all 0.3s;
         }
-        .lang-switch-container:hover { color: var(--sovereign-gold); }
+        .lang-switch-container:hover { color: var(--sovereign-gold); border-color: var(--sovereign-gold); }
 
+        /* Responsive Grid */
         @media (min-width: 768px) {
             .cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .cols-4 { grid-template-columns: repeat(2, 1fr); } /* 2x2 for aesthetic balance */
+            .gate-interface { width: 400px; max-width: none; }
+            .main-logo { width: 180px; }
+            .dossier-title { font-size: 1.4rem; }
+        }
+        
+        @media (min-width: 1024px) {
             .cols-4 { grid-template-columns: repeat(4, 1fr); }
         }
 
@@ -180,7 +223,7 @@
         </div>
         <div class="gate-interface">
             <div class="instruction" data-key="gate_title">ورود به خزانه</div>
-            <input type="password" id="passkey" class="access-input" placeholder="ACCESS KEY">
+            <input type="password" id="passkey" class="access-input" placeholder="ACCESS KEY" autocomplete="off">
             <div class="status-message" id="status-msg"></div>
             <button class="enter-btn" onclick="verifyAccess()" data-key="enter_btn">ورود به پرونده</button>
         </div>
@@ -203,8 +246,8 @@
                 </div>
                 <div class="dossier-content cols-3">
                     <div class="data-item" data-key="doc1_col1">بازبینی جامع و کامل و بازتنظیم سازمانی به اقتضائات عصر دانایی</div>
-                    <div class="data-item" data-key="doc1_col2">بررسی و بازبینی وضعیت کنونی سازمان در بهره مندی شایسته از دستاوردهای عصر شمارپیکرپردازگانی</div>
-                    <div class="data-item" data-key="doc1_col3">بررسی و بازبینی وضعیت کنونی سازمان در بهره مندی از امکان حضور در عرصه کارگردیاری جهانی</div>
+                    <div class="data-item" data-key="doc1_col2">بررسی و بازبینی وضعیت کنونی سازمان در بهره‌مندی شایسته از دستاوردهای عصر شمارپیکرپردازگانی</div>
+                    <div class="data-item" data-key="doc1_col3">بررسی و بازبینی وضعیت کنونی سازمان در بهره‌مندی از امکان حضور در عرصه کارگردیاری جهانی</div>
                 </div>
             </div>
 
@@ -213,10 +256,10 @@
                     <h2 class="dossier-title" data-key="doc2_title">پیمان سری راهبردی رشد و شکوفایی شخصی</h2>
                 </div>
                 <div class="dossier-content cols-4">
-                    <div class="data-item" style="justify-content: center;" data-key="doc2_col1">برخواستگان گردیاری</div>
-                    <div class="data-item" style="justify-content: center;" data-key="doc2_col2">چابکی</div>
-                    <div class="data-item" style="justify-content: center;" data-key="doc2_col3">نومانی</div>
-                    <div class="data-item" style="justify-content: center;" data-key="doc2_col4">نونشانی و نوآنی</div>
+                    <div class="data-item" style="justify-content: center; text-align: center;" data-key="doc2_col1">برخواستگان گردیاری</div>
+                    <div class="data-item" style="justify-content: center; text-align: center;" data-key="doc2_col2">چابکی</div>
+                    <div class="data-item" style="justify-content: center; text-align: center;" data-key="doc2_col3">نومانی</div>
+                    <div class="data-item" style="justify-content: center; text-align: center;" data-key="doc2_col4">نونشانی و نوآنی</div>
                 </div>
             </div>
 
@@ -235,7 +278,8 @@
     </section>
 
     <script>
-        // --- تنظیمات زبان ---
+        // --- تنظیمات زبان و محتوا ---
+        // این بخش قلب تپنده محتوای دوزبانه است.
         const translations = {
             fa: {
                 gate_title: "ورود به خزانه",
@@ -286,6 +330,7 @@
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
             
+            // به‌روزرسانی متون
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if (translations[currentLang][key]) {
@@ -293,17 +338,24 @@
                 }
             });
             
-            // فونت‌ها را هم بر اساس زبان تنظیم کنیم
+            // تغییر فونت‌ها و استایل‌ها بر اساس زبان
             if(currentLang === 'en') {
                 document.documentElement.style.setProperty('--font-heading', "'Times New Roman', serif");
                 document.documentElement.style.setProperty('--font-body', "'Arial', sans-serif");
+                // جابجایی خط طلایی کنار کارت‌ها در حالت چپ‌چین
+                document.querySelectorAll('.dossier-card').forEach(card => {
+                    card.style.direction = 'ltr';
+                });
             } else {
                 document.documentElement.style.setProperty('--font-heading', "'Doran', 'IranNastaliq', serif");
                 document.documentElement.style.setProperty('--font-body', "'YekanBakh', 'Tahoma', sans-serif");
+                document.querySelectorAll('.dossier-card').forEach(card => {
+                    card.style.direction = 'rtl';
+                });
             }
         }
 
-        // --- منطق ورود ---
+        // --- منطق ورود امنیتی ---
         const gateSection = document.getElementById('gate-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const status = document.getElementById('status-msg');
@@ -314,29 +366,35 @@
             const input = inputField.value;
             
             if(input === "G-Flourish-33-M16") {
+                // تایید موفقیت
                 status.style.color = "#EBB40F"; 
                 status.innerText = translations[currentLang].success_msg;
                 status.style.opacity = 1;
                 btn.style.opacity = 0.5;
                 btn.innerText = translations[currentLang].processing;
+                btn.disabled = true; // جلوگیری از کلیک مجدد
                 
+                // انیمیشن ورود
                 setTimeout(() => {
                     gateSection.style.opacity = 0;
                     setTimeout(() => {
                         gateSection.style.display = 'none';
                         dashboardSection.style.display = 'block';
-                        setTimeout(() => {
+                        // تریگر کردن انیمیشن CSS با تاخیر کم
+                        requestAnimationFrame(() => {
                             dashboardSection.style.opacity = 1;
                             dashboardSection.style.transform = 'translateY(0)';
-                        }, 50);
+                        });
                     }, 800);
                 }, 1500);
 
             } else {
+                // خطای ورود
                 status.style.color = "#8a0e0e";
                 status.innerText = translations[currentLang].error_msg;
                 status.style.opacity = 1;
                 
+                // لرزش اینپوت
                 inputField.style.borderColor = "#8a0e0e";
                 inputField.animate([
                     { transform: 'translateX(0px)' },
@@ -355,9 +413,15 @@
             if (event.key === "Enter") verifyAccess();
         });
         
-        // Service Worker
+        // Service Worker Register
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
         }
     </script>
 </body>
